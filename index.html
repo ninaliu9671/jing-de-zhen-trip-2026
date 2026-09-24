@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="ps84fR6b4VWFK911moSRVz">
+<head data-page-node-id="8C3I7GewvBCVCaHksGvOBK">
+<meta charset="UTF-8" data-page-node-id="BnVqm4T8MMaK5yTO3oYNOZ">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" data-page-node-id="mXJvSqtmCRWpqV4Hsoskbn">
+<title>景德镇 · 6天5晚旅行工具</title>
+<style>
+  :root{
+    --blue:#2f5d8a; --blue-d:#1f3f63; --celadon:#7ba89b; --clay:#c0533b;
+    --cream:#f6f4ef; --card:#ffffff; --ink:#2b2b2b; --muted:#6b6b6b; --line:#e7e2d8;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--cream);color:var(--ink);font-size:15px;line-height:1.6;}
+  /* Header */
+  header{background:linear-gradient(135deg,var(--blue) 0%,var(--celadon) 100%);color:#fff;padding:18px 16px 16px;}
+  header h1{margin:0;font-size:20px;letter-spacing:1px;}
+  header .sub{font-size:13px;opacity:.92;margin-top:4px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);font-size:12px;
+    padding:3px 9px;border-radius:20px;}
+  /* Top phase tabs */
+  nav.phases{position:sticky;top:0;z-index:40;display:flex;background:var(--blue-d);
+    box-shadow:0 2px 8px rgba(0,0,0,.14);}
+  nav.phases button{flex:1;background:none;border:none;color:rgba(255,255,255,.78);
+    padding:13px 8px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;
+    border-bottom:3px solid transparent;letter-spacing:.5px;}
+  nav.phases button.active{color:#fff;border-bottom-color:var(--celadon);background:rgba(255,255,255,.07);}
+  .fld{width:100%;padding:8px 9px;border:1px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:14px;background:#fff;color:var(--ink);box-sizing:border-box;}
+  /* Layout */
+  .layout{display:flex;align-items:flex-start;}
+  /* Sidebar (vertical directory) */
+  .sidebar{position:sticky;top:50px;flex:0 0 200px;width:200px;height:calc(100vh - 50px);overflow-y:auto;
+    background:var(--card);border-right:1px solid var(--line);padding:16px 10px 36px;}
+  .side-head{font-size:14px;font-weight:700;color:var(--blue-d);margin:2px 6px 12px;letter-spacing:.5px;}
+  .side-nav button{display:block;width:100%;text-align:left;background:none;border:none;padding:9px 10px;
+    border-radius:8px;font-size:13.5px;color:var(--muted);cursor:pointer;margin:2px 0;font-weight:500;
+    font-family:inherit;line-height:1.35;}
+  .side-nav button:hover{background:#f1f4f7;}
+  .side-nav button.active{background:#eef2f6;color:var(--blue);font-weight:700;}
+  .side-nav button.sub{padding-left:24px;font-size:12.5px;}
+  .grp-toggle .caret{float:right;transition:transform .2s;font-size:11px;margin-top:3px;}
+  .grp.collapsed{display:none;}
+  .grp-title{font-size:11.5px;color:var(--muted);font-weight:700;margin:16px 8px 5px;letter-spacing:.5px;}
+  .grp-title.soon{display:flex;justify-content:space-between;align-items:center;}
+  .grp-title.soon span{font-size:10px;background:#eee;color:#9a9a9a;padding:1px 7px;border-radius:10px;font-weight:500;}
+  .soon-note{font-size:11px;color:#b3b3b3;margin:0 10px 4px;line-height:1.4;}
+  /* Sections */
+  main{padding:14px 13px 40px;max-width:780px;margin:0 auto;}
+  /* Mobile drawer */
+  .menu-toggle{display:none;}
+  .overlay{display:none;}
+  @media(max-width:820px){
+    .sidebar{position:fixed;left:0;top:0;transform:translateX(-105%);width:248px;height:100vh;z-index:60;
+      transition:transform .25s ease;box-shadow:2px 0 14px rgba(0,0,0,.18);}
+    .sidebar.open{transform:translateX(0);}
+    .menu-toggle{display:flex;align-items:center;gap:6px;position:fixed;right:16px;bottom:18px;z-index:55;
+      background:var(--blue);color:#fff;border:none;border-radius:24px;padding:11px 16px;font-size:14px;
+      box-shadow:0 3px 10px rgba(0,0,0,.25);cursor:pointer;font-family:inherit;}
+    .overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;}
+  }
+  section{display:none;animation:fade .25s ease;}
+  section.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2{font-size:17px;margin:6px 0 12px;color:var(--blue-d);border-left:4px solid var(--celadon);padding-left:9px;}
+  h3{font-size:15px;margin:16px 0 8px;color:var(--blue);}
+  p{margin:6px 0;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 13px;margin:10px 0;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .grid{display:grid;gap:10px;}
+  .g2{grid-template-columns:1fr 1fr;}
+  @media(max-width:520px){.g2{grid-template-columns:1fr;}}
+  /* Timeline */
+  .tl{position:relative;margin:8px 0 4px;padding-left:18px;border-left:2px solid var(--celadon);}
+  .tl .ev{position:relative;margin:0 0 14px;}
+  .tl .ev::before{content:"";position:absolute;left:-25px;top:5px;width:9px;height:9px;border-radius:50%;
+    background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 2px var(--celadon);}
+  .tl .t{font-weight:700;color:var(--blue-d);font-size:14px;}
+  .tl .d{font-size:13.5px;color:var(--ink);}
+  .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:6px;margin-right:5px;vertical-align:middle;}
+  .t-first{background:#e8f0e6;color:#3c7a4a;} .t-alt{background:#fbeee9;color:var(--clay);}
+  .t-free{background:#e6eef7;color:var(--blue);} .t-book{background:#fdf3d8;color:#9a6b00;}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--card);border-radius:10px;overflow:hidden;}
+  th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;}
+  th{background:#eef2f6;color:var(--blue-d);font-weight:700;}
+  .note{background:#fff8e9;border-left:3px solid #e0a400;padding:9px 11px;border-radius:8px;font-size:13px;margin:10px 0;}
+  .warn{background:#fdeeea;border-left:3px solid var(--clay);padding:9px 11px;border-radius:8px;font-size:13px;margin:10px 0;}
+  .ok{background:#eaf5ec;border-left:3px solid #3c9a55;padding:9px 11px;border-radius:8px;font-size:13px;margin:10px 0;}
+  .food-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  @media(max-width:520px){.food-grid{grid-template-columns:1fr;}}
+  .food{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 11px;}
+  .food b{color:var(--blue-d);}
+  .price{color:var(--clay);font-weight:700;font-size:12.5px;}
+  /* checklist */
+  .chk{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;
+    margin:6px 0;background:var(--card);cursor:pointer;font-size:14px;}
+  .chk input{margin-top:3px;width:17px;height:17px;accent-color:var(--blue);flex:0 0 auto;}
+  .chk.done span{text-decoration:line-through;color:var(--muted);}
+  .copybtn{font-size:11px;color:var(--blue);background:#eef2f6;border:none;border-radius:6px;padding:2px 7px;margin-left:6px;cursor:pointer;}
+  .btn{display:inline-block;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:14px;cursor:pointer;margin:4px 6px 4px 0;}
+  .btn.ghost{background:#eef2f6;color:var(--blue);}
+  .budget td:last-child{text-align:right;color:var(--clay);font-weight:700;white-space:nowrap;}
+  .small{font-size:12px;color:var(--muted);}
+  footer{text-align:center;font-size:11.5px;color:var(--muted);padding:20px 10px 30px;}
+  a{color:var(--blue);}
+</style>
+</head>
+<body data-page-node-id="XpTBRtTC2tg6EOe1J812q6">
+
+<header data-page-node-id="1eIKyDwpoFv6nlefy1KtgV">
+  <h1 data-page-node-id="VymsyPqfZcyWhq13DqWpoe">🏺 景德镇 · 6天5晚旅行工具</h1>
+  <div class="sub" data-page-node-id="v8JlAqzEbFMRG3vDlof6Ja">2026.10.1 周四 – 10.6 周二 · 国庆错峰 · 先远后近 · 先户外后室内</div>
+  <div class="chips" data-page-node-id="O8tXPjKkUOoaAPnHkqVPoZ">
+    <span class="chip" data-page-node-id="og066Ij8F05q9iQzszZO4x">6天5晚</span>
+    <span class="chip" data-page-node-id="ug9QjrGIxPFEK9SgOIVI9F">上海⇄景德镇北</span>
+    <span class="chip" data-page-node-id="IgFmnn7i21Efnq5h2xU26E">陶溪川·白杨庭院美宿</span>
+    <span class="chip" data-page-node-id="kM7jTFDufHPDAKWd5VmrDo">14个预约/市集节点</span>
+    <span class="chip" data-page-node-id="VHPbm31iohhjAswarsdfYG">更新于 2026-09-23</span>
+  </div>
+</header>
+
+<nav class="phases" id="phases">
+  <button data-phase="before" class="active">📋 行前</button>
+  <button data-phase="during">🧳 行中</button>
+  <button data-phase="after">📷 行后</button>
+</nav>
+
+<div class="phase" id="phase-before">
+<button class="menu-toggle" id="menuToggle" aria-label="打开目录">☰ 目录</button>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">📑 旅行目录</div>
+    <nav class="side-nav" id="sideNav">
+      <div class="grp-title">📋 行前计划</div>
+      <button data-t="overview" class="active">总览（大交通/住宿/天气）</button>
+      <button class="grp-toggle" data-grp="days">📅 每日行程 <span class="caret">▾</span></button>
+      <div class="grp" id="grp-days">
+        <button data-t="d1" class="sub">D1 · 10.1 抵达</button>
+        <button data-t="d2" class="sub">D2 · 10.2 瑶里</button>
+        <button data-t="d3" class="sub">D3 · 10.3 约拍</button>
+        <button data-t="d4" class="sub">D4 · 10.4 陶艺</button>
+        <button data-t="d5" class="sub">D5 · 10.5 文博</button>
+        <button data-t="d6" class="sub">D6 · 10.6 返程</button>
+      </div>
+      <button data-t="markets">🛍️ 市集导览</button>
+      <button data-t="food">🍜 美食地图</button>
+      <button data-t="tips">⚠️ 避坑指南</button>
+      <button data-t="tools">🧰 实用工具</button>
+    </nav>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+<main data-page-node-id="sAXG1hSH45y7nGFnTeyjY4">
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview" class="active" data-page-node-id="zIHuczxXP00niiPOL2OVF6">
+  <h2 data-page-node-id="Zd1CH8AI3NdlohXe4LPA1Y">行前总览</h2>
+
+  <div class="card" data-page-node-id="3HDGqBCnFPPg3aldoiRnfB">
+    <h3 style="margin-top:2px" data-page-node-id="8Cr7PU8azuUiL6oMhQFmOn">🚄 大交通（已订票）</h3>
+    <div class="grid g2" data-page-node-id="e9T6AXgHXmA5x2a7Jo92hR">
+      <div data-page-node-id="8DJa9k0T9JJYfVYchES0Mc">
+        <span class="tag t-first" data-page-node-id="AHfi50vKFTGCGrNYtC1rcG">去程</span><b data-page-node-id="CCM3ghSjmSGjfRXHDcp6wf">G1439 复兴号</b><br data-page-node-id="ocBKX3HDdqUTDCllcBfHJr">
+        上海南 11:12 → 景德镇北 15:02<br data-page-node-id="vaMIgY6IitOOOxFHLkqeAV">
+        检票口 5A5B · 9车厢 08A/08B · 二等座 ¥276
+      </div>
+      <div data-page-node-id="BiP6W656H0wyzb47CwfJMb">
+        <span class="tag t-alt" data-page-node-id="mThx64gp3EzGQBW8uSxDNa">返程</span><b data-page-node-id="fNyTSDgAI04EBdMZGOaX46">D3324</b><br data-page-node-id="7lb6hZ84wN0fbp4KfAQazP">
+        景德镇北 07:25 → 上海虹桥 11:29<br data-page-node-id="jNcIROSnUbEUdhEchgCQMt">
+        南二层2号检票口 · 8车厢 01C/07C · 二等座 ¥232
+      </div>
+    </div>
+    <p class="small" data-page-node-id="Ve6x10WkXVPNvgqaeJSaIK">景德镇北站→陶溪川打车约30分钟；到御窑/陶阳里约15-20分钟、车费15元左右。国庆出站+打车排队约40-60分钟，预留缓冲。</p>
+  </div>
+
+  <div class="card" data-page-node-id="iiBD8MhSb4IDmDAiJGKnq9">
+    <h3 style="margin-top:2px" data-page-node-id="ZXOlyxZoPFaeZ53m0Z0uf4">🏠 住宿 & 市内交通</h3>
+    <p data-page-node-id="XoIuf7Luy7s71NRdZSdc91"><b data-page-node-id="vIp8uv8q4aHrHNJF0j1ICm">白杨·庭院美宿</b>（陶溪川文创街区周边）：步行可达陶溪川市集，打车到各市区景点 10-15 分钟。</p>
+    <p data-page-node-id="ol426OFh3sKnt2dKfPpPJg">市内以<b data-page-node-id="J2fb9mLaXV0HrwvxuQVALJ">打车</b>为主，远郊（瑶里/寒溪）建议<b data-page-node-id="qFHWXBb7lzTdzIP7bNSvEo">包车</b>。国庆新增<b data-page-node-id="0EjMN2Idk9ucjmC7E2LuBi">市区景区公交环线（接驳车）</b>，可减轻打车压力。早班返程务必提前1天约车。</p>
+  </div>
+
+  <div class="card" data-page-node-id="AslSokhn5TKhKcNCPESGJT">
+    <h3 style="margin-top:2px" data-page-node-id="39OMRLOwGk75ofRHjTEDIu">🌤️ 天气参考（手机15日预报 · 9.23基准）</h3>
+    <p class="small" data-page-node-id="yCgG8g8MbF5RsCPINy8aKR">以下以<b data-page-node-id="aOhy6moGPfBDXBR9BO8fGy">手机15日预报（9.23截图）</b>为基准：前期小雨/阴、中后期升温到 35℃、末尾两天转小雨。长程预报仍会变，<b>出发前2-3天再刷新手机预报</b>。</p>
+    <table data-page-node-id="ebH2H5ZeonpPCLCK796sAA">
+      <tr data-page-node-id="IdRdIVnyWLRyRRoOEJCJFl"><th data-page-node-id="8yZcCNI2NINDcd8i57uZCG">日期</th><th data-page-node-id="UyFz1dvB16E107rFL9rZ5o">天气</th><th data-page-node-id="SyswUVLvfBxSJnaBn6NPEX">气温</th><th data-page-node-id="UoMB6QtXR6ElAf8RgANvXf">行程提示</th></tr>
+      <tr data-page-node-id="3ZT8fTBaEPNcZaNELgGDzG"><td data-page-node-id="PC6cHUDYBDtuKT512C68pw">10.1 周四</td><td data-page-node-id="1gsrIwkRN2tX1gHbVKhSeE">小雨</td><td data-page-node-id="NEmIH7GxcImKh2OBY8iWBr">19-25℃</td><td data-page-node-id="kAENeFPBiUWdxLqHj74X7X">到站日有雨且最凉，带伞，到店后先室内</td></tr>
+      <tr data-page-node-id="Bbe0cRS5j21estDZAiUq5B"><td data-page-node-id="060sN7Mlq3TVcZ3zCtKIVH">10.2 周五</td><td data-page-node-id="5d1oip7eMWjaRoewiCKMeE">阴</td><td data-page-node-id="imdZZUsUNYbemXqJoFFZI1">20-28℃</td><td data-page-node-id="QEwwYNJlaihgWTsoU6QFdm">体感舒适，远郊最佳窗口，早出早回</td></tr>
+      <tr data-page-node-id="5D9J4SpnGFJI2DvIEqm4b6"><td data-page-node-id="zCkH99KeRtTd3ohhfD2moE">10.3 周六</td><td data-page-node-id="5cVmh34vPpqrFDKjv9nXjQ">阴</td><td data-page-node-id="pVxMh7zscDUeQPlT6EAF0l">25-32℃</td><td data-page-node-id="7HS1arO3WY3cJirjALkHIm">白天转热，正午避晒，傍晚拍红墙</td></tr>
+      <tr data-page-node-id="juDlnMdfZ1jv1YDN8p7EEN"><td data-page-node-id="LlzTktOHhVZukBv8fektAu">10.4 周日</td><td data-page-node-id="U7czgapJbtEoVK4Ug7jPh0">阴</td><td data-page-node-id="TT675MWpZICl2RpTFk8U9C">26-35℃</td><td data-page-node-id="KckGp5vqN5827GENMwdIYQ">全程最热一天，全天室内陶艺最舒服</td></tr>
+      <tr data-page-node-id="PFy8lCvykf2A0n8IFHXUgJ"><td data-page-node-id="UOJtnsCF4BjKB6HoRLI7Kd">10.5 周一</td><td data-page-node-id="EcqygTa5ISMaxny8UHAuHO">小雨</td><td data-page-node-id="iRm4qQkB8UbsYpmCp3EGJL">21-35℃</td><td data-page-node-id="t0tFhrUtoPxGitY1nLyqKp">白天仍热+转雨，全室内行程适配，带伞</td></tr>
+      <tr data-page-node-id="ifiUfBM1a2XkWAOHVCdAGA"><td data-page-node-id="MflP1Q2sKMUHh9SDuyqPhM">10.6 周二</td><td data-page-node-id="3ke7g4uKNJoBCHHw9AAWXZ">小雨</td><td data-page-node-id="reqP1bjsDnuJQQq9HzMJOd">22-31℃</td><td data-page-node-id="griqGfg2JXJjChCpnWK9hf">返程日有雨，早班返程留足时间</td></tr>
+    </table>
+    <div class="warn" data-page-node-id="71DdtHzQFS0WP1WIagaa9J">⚠️ 两个真实变量：<b data-page-node-id="PyWSrlngQtSYbnwsDvXkrv">D3-D5（10.3-10.5）白天热</b>（最高 32→35℃，防晒防暑、避正午）和 <b data-page-node-id="9QZnGpqqEPwtcHSxf73vwU">D5-D6（10.5-10.6）转小雨</b>（室内/市集优先）。昼夜温差约 10℃，早晚备薄外套。</div>
+    <div class="note" data-page-node-id="WFBSp6tuXCAw8kvmURJjSP">💡 各家长程预报分歧较大（有的报国庆无雨、有的报连雨），以上仅是 9.23 快照，以出发前手机实时预报为准。</div>
+  </div>
+
+  <div class="card" data-page-node-id="g6G6anB1bgHbwH1C2LLPzW">
+    <h3 style="margin-top:2px" data-page-node-id="VQbPH8T7f8JWZCHOc49sOK">📋 必预约项目汇总</h3>
+    <table data-page-node-id="ef2D7CYxZeq7UHFQPXOpbx">
+      <tr data-page-node-id="poOZlBBbKcqECKv3TfaaKP"><th data-page-node-id="BxXzf8D6sFeaUb5wGXrCBc">项目</th><th data-page-node-id="nqyTyQxC2eiXg5ytZN6PCI">渠道</th><th data-page-node-id="0Lnv6oeliH8KsSJqSWE7Kv">提前</th><th data-page-node-id="JDF5gKd0pP46FbW78Zz7OA">关键规则</th></tr>
+      <tr data-page-node-id="DFwsB7CC0OIZFRoFC7Ufip"><td data-page-node-id="sKtU1epXVZm9xVsTMx5bQT">中国陶瓷博物馆</td><td data-page-node-id="vJixT1Q6QLF9dEJxKRWQAN">「畅游景德镇」小程序</td><td data-page-node-id="iKwfiDeIFPcvKu31cAiPQn">5天，8/12/20点放票</td><td data-page-node-id="kzzCjiQXXXJMAVkyC9JPiC">免费，实体身份证入馆；周一闭馆（国庆正常开）</td></tr>
+      <tr data-page-node-id="17u3sHcCYPzEtlqp8Krtc5"><td data-page-node-id="HjQ0ZLjnVykpjNMBEnOAIx">御窑博物馆</td><td data-page-node-id="K6GzY6ChG5g8wlNzJHcvll">「畅游景德镇」小程序</td><td data-page-node-id="BBE4esg7zngD8M6zXAskiR">3天，0点放票</td><td data-page-node-id="8wbjB7I2qmzyqNFZE5NCBa">免费；<b data-page-node-id="JsPTtB75wNY7WP1LWF3UsP">须先购陶阳里门票</b>；20:30后仅外景</td></tr>
+      <tr data-page-node-id="dD7vcMGaAj4foisHXagcoG"><td data-page-node-id="qWIfv7KpVqYtuvMwEq1fYB">陶阳里景区</td><td data-page-node-id="qWxDLXVjHyi4RhN5Yu1qZj">线上/现场</td><td data-page-node-id="Ee29yrGyvXMVsfULVtyNrK">随买随用</td><td data-page-node-id="zbPGExVMNryjF4pvWZyTJj">通票53元，3天内不限次进出</td></tr>
+      <tr data-page-node-id="GEJCKTxVFfu2ky6dzC3AlH"><td data-page-node-id="yyRaqnaUw8oqkfADhyrVpI">早间约拍</td><td data-page-node-id="wc8ma8A7vlqwGmxTDqTFc4">微信客服定金锁档</td><td data-page-node-id="GRZqjyKVqCpdehiiUuuhQl">提前确认</td><td data-page-node-id="dOxiCdNFs401KhhqMGMxPQ">7:00到店，迟到15分钟档期作废</td></tr>
+      <tr data-page-node-id="I4nHB691K9Liq38ravY5Xq"><td data-page-node-id="oAf1cdVd7RoN5GjZ7JORpm">野草studio陶艺</td><td data-page-node-id="xMfozwcLEotfd192e3xLst">小红书/吕老师14777853873</td><td data-page-node-id="1DebVqOYnpxK1EBJWM2fag">1-2周</td><td data-page-node-id="2gs7tXNFRvLcRAfEGYgV4p">单日¥300已确认（10:30-18:00）</td></tr>
+      <tr data-page-node-id="dGFiZZAsu1HQIyd8MYXIv8"><td data-page-node-id="VysyYLEPx4osYHoFH4P6yo">瑶里包车</td><td data-page-node-id="qaPWY2Tf3bZH7FQ4oKVp9o">平台/民宿推荐</td><td data-page-node-id="iB4zB9ugnprdoGtSD3gqGk">1-2天</td><td data-page-node-id="HHWVeB18nDaeQv4MAlKtRG">国庆车源紧，确认往返价+等候</td></tr>
+      <tr data-page-node-id="DmnIGme8Kpfa5jKCmf2I1l"><td data-page-node-id="lA7AFOHSL0YkFNYIyqkZbF">返程打车</td><td data-page-node-id="3JTuqCggAv8pbMQkRRsUGP">平台预约</td><td data-page-node-id="voavBU6XzuODK1KAaAx3BY">提前1天</td><td data-page-node-id="V1VODCigBHusMtlCawpRNv">6:10出发，预约更稳</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ D1 ============ -->
+<section id="d1" data-page-node-id="hlZIYWD0nI8n1OxwBzL6Zd">
+  <h2 data-page-node-id="feY5aRds70sefXmb6jcHrd">D1 · 10.1 周四 抵达日 · 陶溪川夜游</h2>
+  <div class="card" data-page-node-id="Lm1CeOof2ogWDrDT3ii7XQ">
+    <p data-page-node-id="PJyq2MK0H27oKHqbmZYBxS"><b data-page-node-id="zEpegDBoWH25NxUzRjRE0h">核心：</b>下午较早到站，不跨区折腾，松弛入住，先吃饭再逛市集。</p>
+    <div class="tl" data-page-node-id="w1MfMC3jFDOhC0refYXQdV">
+      <div class="ev" data-page-node-id="15CVkm4z7wRjJzInQgUwir"><span class="t" data-page-node-id="sX356WVExS5pGZGTSyfl64">15:02</span> <span class="d" data-page-node-id="kDJsc2tsvL7hrf2HkInVSG">景德镇北站到站，国庆出站+打车排队约40-60分钟</span></div>
+      <div class="ev" data-page-node-id="6nonkRbEaE9FG9WpHukR3m"><span class="t" data-page-node-id="176qr8Kg38HrQ1R84iVqLp">16:30（红线17:00）</span> <span class="d" data-page-node-id="g2RWPfJFteltysaqfB6CwO">抵达民宿放行李</span></div>
+      <div class="ev" data-page-node-id="F43uN3IrMLO57iWYMoYFvc"><span class="t" data-page-node-id="ZCkAQo5qbhChjJLFaTUeef">17:00（红线18:00）</span> <span class="d" data-page-node-id="fYOYDSRlZBAsXykY9liHhc">晚餐——18点后网红店排队明显，19点后爆炸</span></div>
+      <div class="ev" data-page-node-id="xtGS1LQ0hdc7HrFRPVuESp"><span class="t" data-page-node-id="6rdUZAirXUX8aBhRVO0ZYL">19:00后</span> <span class="d" data-page-node-id="UTPmG7mUfmxTNbhxlnHRst">逛陶溪川创意市集看老厂房夜景 + 糖王周毅糖塑艺术馆</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-page-node-id="2IxXYtJcmyCznLDPHaPRzS">
+    <h3 style="margin-top:2px" data-page-node-id="TTLkAyRkmRuKaHNsS4fkVM">🍽 晚餐三选一（陶溪川周边）</h3>
+    <div class="grid g2" data-page-node-id="hT6tcdrzCVKgkHxzHsv5ap">
+      <div class="food" data-page-node-id="7qG1ppfWGP4ROD6zE9w0ES"><span class="tag t-first" data-page-node-id="CHpFY7AJAdr3Al08JDqA5K">首选</span><b data-page-node-id="wDOgQLaJhF54xmvF5EiPbA">景巷·景德山西菜</b><br data-page-node-id="iN67e6DSAjyFi0L1ACH7t2">瓷风环境，窑烤鸡、乌腌腊肉饭，抵达第一顿仪式感正餐。</div>
+      <div class="food" data-page-node-id="bBMjVMKY3yQARWfL5BNK9I"><span class="tag t-alt" data-page-node-id="w5GT14BmqP7jwZSmhD5c7J">备选A</span><b data-page-node-id="tSOdl0ta2I11Jzcq2fgGQZ">景川记·景德口味菜</b><br data-page-node-id="5TcssmUGKDzeJy6KqS9RKO">可做不辣，瓦罐汤、鸡汁豆冲，排队友好。</div>
+      <div class="food" data-page-node-id="Ak6aLFajItV1LvK1BKTPwh"><span class="tag t-alt" data-page-node-id="0cMEQSEATCVOT6Zxryme9A">备选B</span><b data-page-node-id="zIAb5dHu4OwLinMEiRrQlr">花香酒酿壹碗粉</b><br data-page-node-id="llZ3guvOmMuxFje6J3zUJE">冷粉+酒酿，出餐快，应对到站晚。</div>
+      <div class="food" data-page-node-id="KX7EuwveNCUky0cufMEPs7"><span class="tag t-book" data-page-node-id="5B82JfK5jplvzGV62obVys">备选C</span><b data-page-node-id="WAu32PPURENB9MgOMRXPpN">抚州弄小吃街</b><br data-page-node-id="a0VrgNadku5OZRAgC0jR1E">冷粉/油条包麻糍/饺子粑一站式，人均低。</div>
+    </div>
+  </div>
+
+  <div class="card" data-page-node-id="ESnLe8jNAq2GjuDiiJCMbF">
+    <h3 style="margin-top:2px" data-page-node-id="y3PDbU6vBhNS92GgSgyLrX">🌃 夜间安排</h3>
+    <p data-page-node-id="6hmBTJIFhrJ7ICELIuvzdG">顺利到站安顿后（当日有小雨，带伞）：逛<b data-page-node-id="6RhD2RTiQdcivMMD70DjMt">陶溪川创意市集</b>看老厂房夜景，顺路打卡<b data-page-node-id="MNpJRRGB0jX7EJdlf5xZOg">糖王周毅糖塑艺术馆</b>（免费、无需预约，10:00-22:00，晚上灯光打在糖雕上通透感最佳，建议30分钟）。</p>
+    <p data-page-node-id="1Ogm1n8E7IFZvDXtUvaPrb">体力充足追加：<b data-page-node-id="32p5HlDlO7aZE7Wa9Vhp1l">莲羊·青年艺术家岩彩展</b>（陶嘉艺术中心，9.7-10.7 10:00-21:00，现场购票，建议40-60分钟）。</p>
+    <div class="warn" data-page-node-id="SfhmCyy6PP0swsyr26y8qr">⚠️ 下雨/到站晚：放弃跨区去陶阳里，只在陶溪川活动，雨大直接回民宿，陶阳旧市后面还有机会。</div>
+    <div class="note" data-page-node-id="HBPMKGA5GgzaH6yaE2m79c">🧭 导航搜「陶溪川主广场入口」，避免导到外围商铺绕路。</div>
+  </div>
+</section>
+
+<!-- ============ D2 ============ -->
+<section id="d2" data-page-node-id="peYZEqHzLDK4izGMWzDeY3">
+  <h2 data-page-node-id="B19PCUXqhYq5cLmo8xfUzI">D2 · 10.2 周五 远郊日 · 瑶里古镇 + 寒溪村</h2>
+  <div class="card" data-page-node-id="o2AFk3CoXZYnHx3gETSVTR">
+    <p data-page-node-id="A9fQIcfzuNhq8YpXz3dtCv"><b data-page-node-id="XSEIpnB12sODxgvO5DmrgB">核心：</b>阴天体感舒适（20-28℃），安排远郊山水正合适，避开后续高温与雨天。国庆易堵，早出早回。</p>
+    <div class="tl" data-page-node-id="PT2xc2YeKaGqXlNZpYxuCl">
+      <div class="ev" data-page-node-id="LDNMFOLFctv2i9WTXVRYgi"><span class="t" data-page-node-id="TNIviP76JM3vGynDZBWQJo">8:30（红线9:00）</span> <span class="d" data-page-node-id="Gh3ufKnH5CFdIgKdZGZXoD">包车出发</span></div>
+      <div class="ev" data-page-node-id="HDT86uJj311GeOdRZ4D1Bu"><span class="t" data-page-node-id="ksnvzdOD72bpg1TKk1418a">9:30-10:00</span> <span class="d" data-page-node-id="xcUaqMyNiiYk6S9wW8lIZf">抵达瑶里古镇，游览约3小时</span></div>
+      <div class="ev" data-page-node-id="hiMRuAwtzSBBqqKuYHAVHf"><span class="t" data-page-node-id="IzKBs6dVYNYtEyL3F2A4hD">13:30</span> <span class="d" data-page-node-id="rMCDn0g2E4xYrM72nzj3YP">前往寒溪村，约14:00抵达</span></div>
+      <div class="ev" data-page-node-id="cE1J24HuZnJC0ODp4FzWlg"><span class="t" data-page-node-id="WFckrsh9mPD3Dc1RwYqqrU">14:00-18:00</span> <span class="d" data-page-node-id="D1HFNPqSJ20ZnrXiLCdb3w">寒溪村游览约4小时，18:00大地之灯亮灯</span></div>
+      <div class="ev" data-page-node-id="z4irGaBsqWqzUsIJzNWEIw"><span class="t" data-page-node-id="t6LOoDffgIa9mcH2gEUnMz">18:30</span> <span class="d" data-page-node-id="WVyyBggnVNJKsIgERcbDWe">返程市区，约19:30-20:00抵达</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-page-node-id="i7QMck7SWY47qDJ9tJr0F3">
+    <h3 style="margin-top:2px" data-page-node-id="47tGMD9QD18TVDV4JUkEj4">🏞 瑶里古镇</h3>
+    <p data-page-node-id="sVxIBOIGRYVnGmwgAN6SAR">导航搜「<b data-page-node-id="u4qRFKfaZuNd7NrzpbpxXq">瑶里古镇游客中心</b>」，不要直接搜古镇内部。核心看点：瑶河板凳桥、鱼鳞坝、明清古街、程氏宗祠，<b data-page-node-id="qoNQyqpxXjdgXblhXepONF">只逛核心老街免费</b>。上午人最少、雨后晨雾氛围最佳。商业化低、餐饮少且偏贵，可带小零食。</p>
+  </div>
+
+  <div class="card" data-page-node-id="28ZcAre5bx1iJrNGxB7aUp">
+    <h3 style="margin-top:2px" data-page-node-id="EnI3evpEyJMCadSvdVzjg9">🌾 寒溪村 · 大地之灯</h3>
+    <p data-page-node-id="GxB9eYRtzXqWhHg50hjDCR">导航搜「<b data-page-node-id="egfDumfOa9omVFxYXXG436">艺术浮梁会客厅</b>」或「寒溪村」。<b data-page-node-id="z5FGWDevasMeTAUZnxC2U5">全村免费</b>，茶山24h、室内展馆10:00-17:00，<b data-page-node-id="mGZMPBuH6WpRzzABCExhIk">大地之灯18:00准时亮灯</b>，可同时看日落与亮灯。山间蚊虫多、务必驱蚊；浅色长裙出片。</p>
+    <div class="warn" data-page-node-id="AJunC3ZH61aB61TgYAgvUL">⚠️ 寒溪村/瑶里<b data-page-node-id="UZzUINiHx58XixHdbG0qve">打车返程较难</b>，包车最稳；红塔2026.6.26起维修暂停，别白跑。</div>
+  </div>
+
+  <div class="card" data-page-node-id="UVQtQLncQZAyEbxjrt70vH">
+    <h3 style="margin-top:2px" data-page-node-id="YbZGKByH9Vp5maZ72Xd3tO">🍽 餐饮</h3>
+    <p data-page-node-id="k4UnI0yIutWqd7pW0ntRnR">午餐：瑶里本地农家菜，推荐冷水鱼、苦槠豆腐，简餐为主。<br data-page-node-id="kKq5OEbA4Rx1qVwUbHMRW3">
+    晚餐（回市区）：首选<b data-page-node-id="96B6AhePxW7h77XO2jrrJ8">景川记</b>清淡瓦罐汤；备选 好好吃饭·景德菜、回味洋窝。</p>
+    <div class="warn" data-page-node-id="0X68gHWliTNxFy3eBtPJqs">⚠️ 遇大雨直接取消远郊，改市区补逛市集/展览，别硬跑山区。</div>
+  </div>
+</section>
+
+<!-- ============ D3 ============ -->
+<section id="d3" data-page-node-id="pLcoYQeb7H6LrutwRE8Jl5">
+  <h2 data-page-node-id="oskH8M5T81qW5rExBpotRt">D3 · 10.3 周六 约拍日 · 早间写真 + 陶阳里御窑</h2>
+  <div class="card" data-page-node-id="GfSj9ARXM3z3h5Y2QhDhjz">
+    <p data-page-node-id="2JQ6eqJNQhdH57AxHa2KOS"><b data-page-node-id="FOb7OLAqQRiS3LZ2WGhB8p">核心：</b>早间空场拍写真，逛完陶阳里全域，下午回民宿休整避高温（当日最高约32℃）。</p>
+    <div class="tl" data-page-node-id="q1N3MZnulX8XYkNS9bnzoJ">
+      <div class="ev" data-page-node-id="D85vHpRHBQ03SvwGNCAr45"><span class="t" data-page-node-id="PQROP8PFe2fSaaYRTB9G4s">6:20</span> <span class="d" data-page-node-id="AI1DwTWrpA5236Lb2Xf9OT">起床洗漱，6:45提前叫好车，7:00前到写真门店</span></div>
+      <div class="ev" data-page-node-id="30tHXA9txA4dCQ2uT7xMZy"><span class="t" data-page-node-id="deFOLu42LlSnEzF3z5zCbH">7:00-9:00</span> <span class="d" data-page-node-id="I8zRw5xgV2oRWTHVWwQsWp">妆造</span></div>
+      <div class="ev" data-page-node-id="nYiSGNd2hUI9P0EsN9t2tr"><span class="t" data-page-node-id="KWPUOewM55LPuuJZSLMIgW">9:00-10:00</span> <span class="d" data-page-node-id="tZe5Lul8vd2rueFj4DhyzR">正式拍摄（红墙/壶口/弄堂/素胚，9点前机位空场光线柔）</span></div>
+      <div class="ev" data-page-node-id="i3n5u8TT74Y8wnGfogXVP1"><span class="t" data-page-node-id="7LYI0Rzn1WOSFuUkJmbWAD">10:00-13:00</span> <span class="d" data-page-node-id="mQXiinwPPMMOEIZARoq4xv">陶阳里+御窑游览，顺路淘陶阳旧市</span></div>
+      <div class="ev" data-page-node-id="AgavBLnLUz1Fjod5BM7yvs"><span class="t" data-page-node-id="6OGZUAxH833nnldYYrwwjU">14:00前</span> <span class="d" data-page-node-id="Ya4nUlei42Xh2qVkDwtyu4">回民宿午休避正午高温，晚上视体力再逛市集</span></div>
+    </div>
+    <div class="warn" data-page-node-id="87FeQLDGsXeSp3FZBc54kv">⚠️ 迟到15分钟内压缩时长，超15分钟档期作废定金不退。<br data-page-node-id="FOdaVhjkWFD3vyi44GTN4H">起不来可改15:00下午场（17:00后开拍，卡蓝调拍红墙同样出色，容错更高）。</div>
+  </div>
+
+  <div class="card" data-page-node-id="FCKtvgFYaYds3fuGhdiOx6">
+    <h3 style="margin-top:2px" data-page-node-id="n1FIPOyDsjAyEvmtWNVewT">🏯 陶阳里 + 御窑 推荐路线</h3>
+    <p data-page-node-id="O4o3cUNfjZz772rbkeSxkF">导航搜「<b data-page-node-id="9skjToFDnv6d4rNAZYVXMt">御窑遗址南门</b>」。路线：南门→南麓遗址→佑陶灵祠→丰城会馆→黄老大窑→龙珠阁→御窑博物馆红砖拱券→负一层瓷片墙→杨华弄→徐家窑。</p>
+    <p data-page-node-id="v6OXD7EkbxKNEdCFujndCJ">门票：陶阳里通票<b data-page-node-id="LXilJz2On5bZ7mbimXw6ze">53元（3天有效）</b>；御窑博物馆<b data-page-node-id="MfB46aAhqa6E131lDPn8XX">免费需提前预约</b>（且须先有陶阳里门票）。<b data-page-node-id="kXM8xCZm0MlR5nTwv7EQfz">拍照黄金</b>：15:00-17:00光影、19:00蓝调夜景封神。</p>
+    <div class="ok" data-page-node-id="7ojQBRTNNHOlpo7bFY1Q6E">✅ 国庆优惠（9.19-10.31）：陶阳里双人票99/对、门票+AR讲解联票89、门票+手工体验79；旅拍联票（门票+跟拍）99 /（门票+旅拍）399。</div>
+  </div>
+
+  <div class="card" data-page-node-id="TXQNNkf2ptswx8Sp62guI9">
+    <h3 style="margin-top:2px" data-page-node-id="UwuJ0AlGjLxx7HuTmG7eG9">🍜 午餐 · 抚州弄小吃街三选一</h3>
+    <div class="grid g2" data-page-node-id="QRuC77sAA0eown5C21pkDc">
+      <div class="food" data-page-node-id="y45AbmXWPKjhqplcSudQUE"><span class="tag t-first" data-page-node-id="CHgPq3TNShCn26uhLzElL7">首选</span><b data-page-node-id="LWiwtzGLu9DIkKZAHpiqyO">花香酒酿壹碗粉</b><br data-page-node-id="H1vcWwRwP8oE5FQF2o4ONP">冷粉+花香酒酿+饺子粑，本地经典组合。</div>
+      <div class="food" data-page-node-id="X9M6bD86XG9KooFbSuUMTP"><span class="tag t-alt" data-page-node-id="ndi58A7g6pBdjEERWLngbb">备选A</span><b data-page-node-id="uvjilkv9KceHivaH4XWCt5">回味洋窝</b><br data-page-node-id="7nGiyrcHLFdRsACrk5BD7X">本地小炒，锅气足，记得说微辣。</div>
+      <div class="food" data-page-node-id="3FLUSAWHkiaS60ZjnyruBA"><span class="tag t-alt" data-page-node-id="RlPSiDHsaPkoW4Ygcm1pBf">备选B</span><b data-page-node-id="NXzIPqqOkUDDe1rhRkA7bZ">陈一碗牛骨粉</b><br data-page-node-id="noZuz40UCEbwcozzWGWpCa">肉量足，嗦粉过瘾。</div>
+      <div class="food" data-page-node-id="RCD54Apyykca2WKz0ul5Jj"><span class="tag t-book" data-page-node-id="qUhJQZuKWdRZO4RaK49hCM">加项</span><b data-page-node-id="513sHaBb0UZg7ea0Hytz0q">肉饼汤</b><br data-page-node-id="GRqUZiqKDPJA8XhTmW9qre">吃冷粉饺子粑必点，清淡解辣。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ D4 ============ -->
+<section id="d4" data-page-node-id="XBpfkfmLQwKmRTaWMBcjpS">
+  <h2 data-page-node-id="ZiPYE7fqmMPyiY3lceuawK">D4 · 10.4 周日 手作日 · 野草studio全天陶艺 + 设计师集夜场</h2>
+  <div class="card" data-page-node-id="ULqXecNSxNgrFyPaBcH59n">
+    <p data-page-node-id="boKF3AaYcYmmXLCl9S5fyr"><b data-page-node-id="eWeliDzCCAWPfntCObRgED">核心：</b>全天沉浸式学陶艺（高温日躲空调房），晚上衔接设计师集夜场。</p>
+    <div class="tl" data-page-node-id="v82wCgLCqOZ01bhhZkrtMn">
+      <div class="ev" data-page-node-id="3yjLVi5ToRWesYF8XahhCe"><span class="t" data-page-node-id="TLfqDALUHpAIQcXYC0WAME">10:30（红线10:45）</span> <span class="d" data-page-node-id="q6C1q0ze3G6YkuYGOh6jvm">野草studio到场（李家坳路5号）</span></div>
+      <div class="ev" data-page-node-id="LZRpBq3JgxenYP8IyKJm7A"><span class="t" data-page-node-id="H6XYi95BT20zPgJteo6B1q">10:30-18:00</span> <span class="d" data-page-node-id="orkv4y2N8P9DsOhIMRRaRC">拉坯/手捏/泥板/釉下彩绘/上釉；课程可暂停保留进度</span></div>
+      <div class="ev" data-page-node-id="5HqxYplWdJBZY8AcIuWB6N"><span class="t" data-page-node-id="ZWdbSYNELeEpxpOxfWLAmG">18:00后</span> <span class="d" data-page-node-id="WPTnoog6lUbFwqGfMJPWwP">晚餐 → 19:00 陶溪川设计师集入场（红线20:30）</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-page-node-id="reyWcW9SVaOCvrm9yDvNSt">
+    <h3 style="margin-top:2px" data-page-node-id="AJ3l6rPRatq78EcymUvgHV">🏺 野草studio（已确认）</h3>
+    <p data-page-node-id="nLfviLVvytoxahw89SvgME"><span class="tag t-first" data-page-node-id="0e1I9wBWMDEtDvCv7Rt90H">单日¥300</span> 10:30-18:00 全天，国庆不加价，任一天可约。含中白泥/普黄陶/透明釉/24色釉下彩无限用、烧制不限量。<br data-page-node-id="EZ2JNBP4odfYxHHimfpga1">
+    地址：珠山区竟成街道李家坳路5号（紧邻老厂/陶溪川/雕塑瓷厂/三宝）。吕老师 <b data-page-node-id="ahsfOS3PAGq9v15UWveyZH">14777853873</b>。</p>
+    <div class="warn" data-page-node-id="mHRLd3Gq34jHCXW0YLvMcz">⚠️ 待问清：①邮寄代打包3-10元/件；②烧制后破损/丢失赔付；③化妆土/颜色釉等特殊材料另购。超额/特殊材料另购；邮寄务必保价+加厚缓冲（国庆快递爆仓易破损）。</div>
+    <p class="small" data-page-node-id="B5DngfTPceMc3gX0Q9AG2h">午餐：提前跟吕老师确认可暂停1小时外出，或自带便携午餐在studio解决。</p>
+  </div>
+
+  <div class="card" data-page-node-id="KhbksSIoUpayMvjPAuIKFe">
+    <h3 style="margin-top:2px" data-page-node-id="xY1qo9r1MEg8AyMQuYrNGq">🛍 陶溪川设计师集（夜场）</h3>
+    <p data-page-node-id="waTdDVDOhAoSHXLZAS56ip">地点：陶溪川<b data-page-node-id="upUjQbS38Au3aTUrUg1vkP">陶机厂</b>区域；时间 <b data-page-node-id="2qsLlB7Gfr9LCS9eQbyeBH">10.1-10.6 16:00-22:00</b>（国庆档，比原估10.4-10.6更长）。先锋设计、中古、二次元陶瓷，小众不撞款，价格偏高。天黑后灯光氛围最佳，建议2小时。</p>
+    <div class="note" data-page-node-id="qFioRI5ZXDnKBVk1lToB77">🧭 动线：18:00下课→晚餐→19:00入场，全在陶溪川片区不用跨区。收摊后还有体力可补逛陶阳新村夜市。</div>
+    <div class="warn" data-page-node-id="TNOH9aNQvZlqLEju8JmWcg">⚠️ 原Day4的雕塑瓷厂·塑空间/明清园均为周末限定，本行程周末只剩D3已排满，<b data-page-node-id="Dyci4IphbQduNwMZezWaCA">基本放弃</b>；想逛常驻原创店可改D5下午（无市集氛围）。</div>
+  </div>
+</section>
+
+<!-- ============ D5 ============ -->
+<section id="d5" data-page-node-id="BAEAg7Am0YbnizkdTNEHdp">
+  <h2 data-page-node-id="yenxOWnif4ePLgWEpGtK4l">D5 · 10.5 周一 文博日 · 陶瓷博物馆 + 补漏扫尾</h2>
+  <div class="card" data-page-node-id="VVn4YLHp3AWbCrvyy6zRh9">
+    <p data-page-node-id="4bgMNESMIoRCMEu3COmLNN"><b data-page-node-id="0pHsw52V2dyv6YwnfMgapE">核心：</b>全室内行程正好适配当天小雨（白天仍热到35℃），集中逛展、休整收拾行李。</p>
+    <div class="tl" data-page-node-id="v9kAkm1hu3xAJITiAaPNV7">
+      <div class="ev" data-page-node-id="XqncnmcVBfP8AKEcWy0MxI"><span class="t" data-page-node-id="G9c4f5zS7HdoW9I7HA1bII">9:00（红线10:30）</span> <span class="d" data-page-node-id="rL1BUwPIaTZcvBKTyqc8mQ">中国陶瓷博物馆入馆（旅行团高峰前）</span></div>
+      <div class="ev" data-page-node-id="oYSzRb23R2BDA0AsrRcTCN"><span class="t" data-page-node-id="YQ5MU09dlObuJQr0d4TZxz">9:00-11:30</span> <span class="d" data-page-node-id="l3R1VBdENPTOavwGVDquiO">7楼当代→6楼民国/无语佛→5楼明清官窑→4楼宋元/元青花梅瓶→1楼文创</span></div>
+      <div class="ev" data-page-node-id="qVB970mJbAt09tEN5MIGXX"><span class="t" data-page-node-id="zwbyVypRQ58z52H5WQId66">下午</span> <span class="d" data-page-node-id="5D3vKShHcdjLkFfMAYPAZt">三选一：三宝村 / 雕塑瓷厂常驻店 / 市区补漏休整</span></div>
+      <div class="ev" data-page-node-id="4LxgiyAzqolvVv5Yr1BoKN"><span class="t" data-page-node-id="B0zaTZsRCdK4HY3JHDdKm7">睡前</span> <span class="d" data-page-node-id="MWVISoK7tlWRVDH9zM8w1S">确认身份证车票、约好次日早班打车、收拾行李</span></div>
+    </div>
+    <div class="warn" data-page-node-id="pn6qaJjtx418p6NoqiJD4Q">⚠️ 必须携带<b data-page-node-id="BcmBFU4tfvAdoOrrUipSxT">实体身份证原件</b>，电子证无法入馆；广场有自助寄存柜。</div>
+  </div>
+
+  <div class="card" data-page-node-id="dN7FNew0sG1lMdmGDkeGtg">
+    <h3 style="margin-top:2px" data-page-node-id="8valvi0aBcwsOccF7RUsAC">🏛 中国陶瓷博物馆 速览</h3>
+    <p data-page-node-id="8O1y5kHz7cHi0jdD4Yu0Mp">地址：昌江区紫晶大道1号。9:00-17:00（16:30停止入馆），周一闭馆（国庆开）。免费，仅「畅游景德镇」小程序预约，提前5天 8/12/20点放票。<br data-page-node-id="2gaoHEfD8pSNi5AopHeY5g">
+    镇馆之宝：<b data-page-node-id="z9CgSGDvld4vrlT0RKwefd">4楼元青花梅瓶</b>、<b data-page-node-id="Lev4uzUAvTIFCoSuFtqn1Y">6楼网红"无语佛"</b>；7楼制瓷工序群雕。</p>
+  </div>
+
+  <div class="card" data-page-node-id="qZ6D5GQRS173EXBHt2UsyR">
+    <h3 style="margin-top:2px" data-page-node-id="2Lk6vvlHOGrBpRJilE5paL">🌿 下午三选一</h3>
+    <div class="grid g2" data-page-node-id="7xz6bwUv2TkPeqpmAEgEIh">
+      <div class="food" data-page-node-id="7AAF5Ffgi0Cw6S8HUNrGVz"><span class="tag t-first" data-page-node-id="uw5U9EHBhqJhUbQ1aTB2u8">最推荐</span><b data-page-node-id="wlVEhhFqpUXOCkFojpEp6M">三宝村半日松弛游</b><br data-page-node-id="qG3K1WYagSArtXQsfJ3AaK">打车约20分钟，导航「三宝蓬艺术聚落」。瓷片墙/受气瓶、三宝蓬美术馆(约20元)、不空山/9494咖啡，预留2.5-3小时。带伞+驱蚊+防滑鞋。</div>
+      <div class="food" data-page-node-id="ZncqhdBFW3GGAPzGtrxoin"><span class="tag t-alt" data-page-node-id="16AhnLPzjFTgytrNr4PSGE">备选A</span><b data-page-node-id="I7T0Dc5xw332sG0rbGSl38">雕塑瓷厂常驻店</b><br data-page-node-id="2Od8wgPkqRNNHL1zzN8qdl">导航「雕塑瓷厂正门」。周一塑空间/明清园周末市集不开，只逛巷子常驻原创店（每盐所、在野、原来是泥），预留2小时。</div>
+      <div class="food" data-page-node-id="KuqjttCe2C5zs7AqrWLB3s"><span class="tag t-alt" data-page-node-id="HfZVmHLkMvmBFd4Jq2IBRx">备选B</span><b data-page-node-id="HNpDBHLKiavZKRGn2T5MNV">市区补漏+休整</b><br data-page-node-id="pOwEyY1btQCLRtHWEV3u1x">二刷摊位、买伴手礼、回民宿收拾行李、提前买次日便携早餐。</div>
+      <div class="food" data-page-node-id="uCJ4awGeT674VWHDQYWrxW"><span class="tag t-book" data-page-node-id="sCnpCsz304mzwqejvlRqUx">晚餐</span><b data-page-node-id="2VUff1YfZFY3qwN3OKSO8E">返程前最后一顿</b><br data-page-node-id="Ll9Nmn0ChJpEZN3EqGjlBw">首选景巷；备选山野江溪、回味洋窝。</div>
+    </div>
+    <div class="warn" data-page-node-id="Ubk5K5SjxCZuUS4qbYJczv">⚠️ 中秋国庆期间<b data-page-node-id="xTjjKPYWY4DoElLG9NgG7g">未取得通行证机动车禁入陶源谷三宝景区</b>，打车可能只到村口，建议村内租电动车(30元/天)或步行，别自驾硬闯。</div>
+  </div>
+</section>
+
+<!-- ============ D6 ============ -->
+<section id="d6" data-page-node-id="Ryn4kSkfwzkGaMjkhXXdRZ">
+  <h2 data-page-node-id="sggOj3GICjfgFITy8U64FD">D6 · 10.6 周二 早班返程日 · 稳字当头</h2>
+  <div class="card" data-page-node-id="aG4rtAgEAAhBYUWmvrwgcd">
+    <p data-page-node-id="hh8mhFJMlAt1eAp8HSiOWc"><b data-page-node-id="mFtz4zeeE14LSqAqIPfu51">核心：</b>07:25发车，预留充足时间，零误车风险。</p>
+    <div class="tl" data-page-node-id="cvl5iHqCljTED9Wvx1uxe6">
+      <div class="ev" data-page-node-id="8iFRIezdiH7QrHxURxhzxD"><span class="t" data-page-node-id="tH9A4kG8bdv85PwSAA1f6F">5:40</span> <span class="d" data-page-node-id="aW0MNSyFEs2JrhUTdP0bOO">起床洗漱，拿好提前收拾的行李</span></div>
+      <div class="ev" data-page-node-id="QWjXjAmz3ghJIDoYR27MIz"><span class="t" data-page-node-id="Dq5losUIZt9HiYBUaFUtSG">6:10</span> <span class="d" data-page-node-id="1ga6O14bDbbSIZQkRcYoPE">准时出发（提前1天约好车）</span></div>
+      <div class="ev" data-page-node-id="CJlkKkEL5GA4FuahGmmT4d"><span class="t" data-page-node-id="knX09KfgHtkUZgyZvw60dN">6:40</span> <span class="d" data-page-node-id="tcEj8UAOf6igkiNmcmm4lL">抵景德镇北站，南二层2号检票口候车</span></div>
+      <div class="ev" data-page-node-id="6qN8YMbAui4hCAc0vGoLdF"><span class="t" data-page-node-id="8BAma9sM6hSTspUlHT5tsU">7:25</span> <span class="d" data-page-node-id="XVBD0k2zyVLaLrHLtrrQpx">D3324 发车 → 上海虹桥 11:29</span></div>
+    </div>
+    <div class="warn" data-page-node-id="ax5r2XCe17efslAFUBlQtD">❌ 绝对不建议临时找早餐店、卡点出门。早班停止检票早，国庆人流不确定，务必留足缓冲。</div>
+    <div class="ok" data-page-node-id="I2snyZ553Wgqt4A0a45RJG">✅ 早餐：前一晚便利店买面包牛奶路上吃；车站内便利店选择少且贵，不推荐。</div>
+  </div>
+</section>
+
+<!-- ============ MARKETS ============ -->
+<section id="markets" data-page-node-id="OPqhzmxniYooqXaYEe8fSS">
+  <h2 data-page-node-id="KhNytCuiBDrvnpqli4Dxu0">🛍 国庆市集总表</h2>
+  <div class="card" data-page-node-id="C0FEBGxNPEl29MLp1CUa6T">
+    <table data-page-node-id="HGllEBU8UksT7ORWNWEwkI">
+      <tr data-page-node-id="ycDoQ5wpLiAeVYZ9hfo68v"><th data-page-node-id="dMR81xJvL53H7HBRdF0H4U">市集</th><th data-page-node-id="c5qMSnGp7lghQWU50EeGei">时间</th><th data-page-node-id="N77wh5zC9bPrmzcW9UyBnu">地点</th><th data-page-node-id="g06sGU5Hf55MJTwwAJYE8G">特点</th></tr>
+      <tr data-page-node-id="26SzYAxAEESzOUthSAgDIe"><td data-page-node-id="wfbECvoyACEGskbagAwEas">陶阳旧市</td><td data-page-node-id="BhvnVzNx5zvVUsaPq70cFv">10.1-10.7 16-22</td><td data-page-node-id="WFiJXUDDRXZ34B2mXaXXVt">陶阳里步行街</td><td data-page-node-id="Ie5QfDaqw0htcyEZHCPwSb">老瓷片、非遗手作，景德镇独一份古物市集</td></tr>
+      <tr data-page-node-id="37TMcUBGvKgZWRbWyDxcVP"><td data-page-node-id="C2G9aYz1d3DmsFt5SlYO8t">陶溪川创意市集</td><td data-page-node-id="hwl4ewqHkeRxBDTp5ibNYZ">9.30-10.7 16:30-22</td><td data-page-node-id="SHWLmuCF58jhgzcwo4G7fB">陶溪川原宇宙瓷厂</td><td data-page-node-id="aynAsQ57a34l84V4UPV3pf">全市规模最大，原创陶瓷，夜景氛围最佳</td></tr>
+      <tr data-page-node-id="nnsZn1WPtCYVDdiThLkkIg"><td data-page-node-id="FtI4DvaI99zeTwfuoJVxgu">陶溪川设计师集</td><td data-page-node-id="xI7BnYAzTYl3fbTT5D5fKX">10.1-10.6 16-22</td><td data-page-node-id="If4FIY1Pfm48aURN8o5dXb">陶溪川陶机厂</td><td data-page-node-id="TalMyxEUOvr5uEKTFaUEYB">先锋设计，小众不撞款，价格偏高</td></tr>
+      <tr data-page-node-id="Tg1Lvyh1VgijmQAx4LoDi4"><td data-page-node-id="3I6lGvkbLceKVhwycbevlp">雕塑瓷厂·塑空间</td><td data-page-node-id="3lqPqPdaJ9juD23pF1Ltgi">周六日 9-17</td><td data-page-node-id="CAokfbe4GYUtAuOBBtvFPz">雕塑瓷厂主道中段</td><td data-page-node-id="P1GC65rxLB3w981sElkPW3">室内手作；主街多流水线，宝藏店在巷子</td></tr>
+      <tr data-page-node-id="kQw9yo8YPZdIC19gWSFZCt"><td data-page-node-id="RsDppRBvhklE1dE0SUbil5">雕塑瓷厂·明清园</td><td data-page-node-id="yjcU25NnznAQUbIqYKMJvw">仅周六日 8-20</td><td data-page-node-id="evDZE5wM9OPXCoUVO71cWw">雕塑瓷厂南门左侧</td><td data-page-node-id="Hz57wabbH1pHWYvMRB7bGV">传统茶具，古风建筑群，可顺路打卡</td></tr>
+      <tr data-page-node-id="MCpHVK9OUfRCCwYjmviq0e"><td data-page-node-id="GNhTy37yIuOx4ocMScKHvN">陶阳新村夜市</td><td data-page-node-id="F720EZyjMoGcyHxwbtmA17">每日 19-23</td><td data-page-node-id="HquGxIth8kL55hcUqvVXPh">陶阳新村小区</td><td data-page-node-id="9mDrewm7rBddiGRk2xtHmP">平价伴手礼，批量采购，注意打光看瑕疵</td></tr>
+      <tr data-page-node-id="N6tGumg0BFgx5EQ2vt4FaI"><td data-page-node-id="eYP3dz76y1DtthhatigJ54">珠山东市·陶大青年集</td><td data-page-node-id="gg0XyAF4n5cXojUONyzzHo">10.1-10.4 15:30-22:30</td><td data-page-node-id="1L4dHzOMjW8xhbpaB2MfSl">珠山东市</td><td data-page-node-id="uWsFpTmTokH1Er5EtDBHwn">陶瓷手作+青年文创</td></tr>
+    </table>
+    <div class="note" data-page-node-id="RMBTIBJfoc3AJNMcuQMWt9">📌 2026国庆双节相连，陶溪川另有"盛世华诞·遇见陶阳"等巡游活动；寒溪村「艺术在浮梁·秋语」9.19-11.29持续展出。更多活动以官方公众号「景德镇CityWalk」「畅游景德镇」为准。</div>
+  </div>
+
+  <div class="card" data-page-node-id="A2lEeweA2PkWU4Z4TCQu4u">
+    <h3 style="margin-top:2px" data-page-node-id="lYgqjGmZYPtIKR1MVnj502">🍬 顺路场馆（免费/低价）</h3>
+    <div class="grid g2" data-page-node-id="jlezhxgF1KBUHMYodGWKQA">
+      <div class="food" data-page-node-id="cBSY0HO52cxdyCVTAPQPJd"><b data-page-node-id="5mqywCBZL6HGoGaXKAmUx0">糖王周毅糖塑艺术馆</b><br data-page-node-id="T0681Emppg7Se9r22e0JJO">陶溪川「窑与作1C」/陶玉南路124号。免费、无需预约，10:00-22:00。九尾有灵、玉壶、九色鹿糖塑；禁闪光灯；可试吃巧克力、买文创。</div>
+      <div class="food" data-page-node-id="GsKTQbXf8Kxo55Jz2hsXmg"><b data-page-node-id="YNNV26jU6ZE7WjryEvsLga">莲羊·青年艺术家岩彩展</b><br data-page-node-id="MKvibUTPld2hTauYFFIOVR">陶嘉艺术中心（陶溪川宇宙第三象限B9栋）。9.7-10.7 10:00-21:00，现场购票。矿物颜料原作。</div>
+      <div class="food" data-page-node-id="B5AGQGkxufd4wwdEVxOj1X"><b data-page-node-id="fKQWaPdtkOAlh1HBsNoNPV">陶瓷工业遗产博物馆</b><br data-page-node-id="yti8bjkVvtHxP32Xf92B6w">陶溪川A区。免费，9:00-21:00（20:30止），周一闭。老窑炉机械。</div>
+      <div class="food" data-page-node-id="9yvKGw5jEkPW4jv4Bulr3U"><b data-page-node-id="iznCD9ChC13b1i3Z0IGmwQ">陶溪川美术馆</b><br data-page-node-id="LtAGpWAqpVH5oJU8sKm8yr">40元（周五半价20）。红砖厂房展区。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOD ============ -->
+<section id="food" data-page-node-id="OOfD4uAuzHw1pbtfcpxIrS">
+  <h2 data-page-node-id="YuGGpi63VXK4N6ZMxSAueQ">🍜 美食地图</h2>
+  <p class="small" data-page-node-id="nV0vumx6BoFZoNpJw2u9wl">景德镇菜"鲜辣咸香"，点菜统一说<b data-page-node-id="zYXBHXuwD5CPFCmkhqZBnW">「全部微辣，能做不辣的做不辣」</b>。国庆热门餐厅提前线上取号，错峰就餐（17点前或20点后）。</p>
+
+  <h3 data-page-node-id="omoq48QVbTBxix4HreOwwF">必吃清单</h3>
+  <div class="food-grid" data-page-node-id="K7J9FnlbAjE7aRYd2qqkSw">
+    <div class="food" data-page-node-id="mQF2olJCvUOTm8yZuYavmU"><b data-page-node-id="XA7CRA8cIBMuSUH2P3redO">冷粉</b> <span class="price" data-page-node-id="EulopkfNrm8qHm3QFrABYM">6-12元</span><br data-page-node-id="xKSorMB88XVxoHi3PHmitR">粗圆粉+橘皮+萝卜干+辣油，早餐天花板。配肉饼汤。</div>
+    <div class="food" data-page-node-id="3mJqdLMntyopzaIAZirkHK"><b data-page-node-id="ZTUO0mPyIKRINCiiajP5OF">饺子粑</b> <span class="price" data-page-node-id="lslbGMPsDNT9tFp8ezjLV6">1元3个起</span><br data-page-node-id="akMPx21QlnmoLgNy1P0iri">米皮，韭菜豆干(不辣)/萝卜丝(爆辣)，市级非遗。</div>
+    <div class="food" data-page-node-id="4jKh4atTDRPVAoHap0l6tq"><b data-page-node-id="5mYuIiDkVFUS1rvxaDJAdM">油条包麻糍</b> <span class="price" data-page-node-id="DUK4jwjZJIES5R297fBLNu">5-8元</span><br data-page-node-id="TNLxwpleJvZCaCzCCGQsq7">酥油条裹糯麻糍+芝麻糖，外脆内糯。</div>
+    <div class="food" data-page-node-id="Bi3ZTMCMaiW5KeXq3j9wDr"><b data-page-node-id="WiY2grNhWWK2AMHRz7Rqzl">炒碱水粑</b> <span class="price" data-page-node-id="LyOw1YER2XgxtlnEzdvtqm">—</span><br data-page-node-id="m3xvFmpSETybQ7XYQCk0C4">大米+植物碱制，炒腊肉/鸡蛋镬气足。</div>
+    <div class="food" data-page-node-id="AyTq9ezQfxhwcYyDf69gsT"><b data-page-node-id="2CmJZcv1bUIjxjBLCBqmvR">瓷泥煨鸡</b> <span class="price" data-page-node-id="5qPHFdW6BEi6SQ0Y4fyxoU">硬菜</span><br data-page-node-id="a78nGRjMXdi7TssLGWsuWw">荷叶裹鸡+瓷泥窑火慢煨，肉嫩带荷香。</div>
+    <div class="food" data-page-node-id="64h2pr3JYK3KjoEGQLMEy1"><b data-page-node-id="PzgWOrYifMHpwvGY3oIH9Y">牛骨粉</b> <span class="price" data-page-node-id="QSF3PcdUEtKTsD8YYVeTz1">约25元</span><br data-page-node-id="Vxos5FcCmauEcl4V8cztZL">牛骨+米粉，辣得过瘾（非传统但火）。</div>
+    <div class="food" data-page-node-id="MdnlQmeHnTQXU3UqPYUsmZ"><b data-page-node-id="3HtmTMbV7gwqtGoZ7erU0c">苦槠豆腐</b> <span class="price" data-page-node-id="s7JivwEfjaEoE1sh9hebWl">—</span><br data-page-node-id="MkWe3nhHgZarhMxo168N1Q">瑶里深山果实制，炒腊肉解腻，仅瑶里正宗。</div>
+    <div class="food" data-page-node-id="17YHuW1EjLRPPLFtcfwNe7"><b data-page-node-id="6N3WqW986cYXOSGqhQbvSS">肉饼汤</b> <span class="price" data-page-node-id="Ev9BLh3Dz7gIrVbJL3PFvZ">—</span><br data-page-node-id="nBYOpanvHXBPfExOnzG0mC">瓦罐清炖，吃粉粑必点解辣。</div>
+    <div class="food" data-page-node-id="PMHaCgK3To8bHmDha6XlRl"><b data-page-node-id="IxHDLMKSGg9Uaiq8Q34ZJj">鲶鱼煮豆冲</b> <span class="price" data-page-node-id="58C2nt7CfDhNuEAQmN0g7Y">—</span><br data-page-node-id="tUuVCA1eXkhIfPDAZ1avKP">土鲶鱼+油炸豆腐泡奶白汤，三宝农家乐必点。</div>
+    <div class="food" data-page-node-id="kaDBeiA2sdZkHCgSp5HK9h"><b data-page-node-id="dgCdhnThGKJasIVL7Jeo7t">乐平桃酥</b> <span class="price" data-page-node-id="IPJnIOcJXHFLCcOcc3aryL">伴手礼</span><br data-page-node-id="rB2VpCVzHbHC1WFfKWd0lq">江西非遗，酥松一碰即碎，旅行必带。</div>
+  </div>
+
+  <h3 data-page-node-id="x5AJG3VpEH2YqlBjMbMNMZ">餐厅 / 小吃街推荐</h3>
+  <div class="card" data-page-node-id="kA6wcDTWHoJFlKwLfJDRmw">
+    <p data-page-node-id="AmzopBRmhfi7YYTcwV7pi3"><b data-page-node-id="JYKtElyNwTDGQWediJ0Pif">行程内已列：</b>景巷·景德山西菜、景川记、花香酒酿壹碗粉、好好吃饭·景德菜、山野江溪、回味洋窝、陈一碗牛骨粉。</p>
+    <p data-page-node-id="oj2guGUosLYjTKZ28yC48B"><b data-page-node-id="EVtFB2R3yfFEk4L61UmACD">本地人老店：</b>樊氏牛骨粉(浙江路)、谭婆饺子粑、诚信油条(抚州弄)、老陈/阿婆冷粉、回家吃饭(长虹店/浙江路首店)、小黄鱼·爱厨房、乐乐/贰层楼大排档。</p>
+    <p data-page-node-id="QsiMP3e5jWs2mpHI01JD74"><b data-page-node-id="PPde2yDYKkSWBGwBUlJk7r">街区：</b>抚州弄（冷粉/油条包麻糍/绿豆饼一站式）、浙江路（餐饮密集）、陶溪川老巷小吃。</p>
+    <div class="note" data-page-node-id="jdQL93dtGYGLOV6SYretaj">💡 避开陶溪川主街网红溢价店；人民广场周边赣菜馆更实在。</div>
+  </div>
+</section>
+
+<!-- ============ TIPS ============ -->
+<section id="tips" data-page-node-id="CeSDyILpDTp6MMdHgVBgtD">
+  <h2 data-page-node-id="fvUzoybUbkIFZeMYzzbeZb">🛡 终极避坑指南</h2>
+
+  <div class="card" data-page-node-id="CiO0cGeA8rKEiehiyKRWcf">
+    <h3 style="margin-top:2px" data-page-node-id="bXaumdiOaBF9S3KE5xoXxv">🧭 导航精准定位（别搜大地名，90%跑错）</h3>
+    <table data-page-node-id="5KwlFTlJ50p2LliAQ5ik7b">
+      <tr data-page-node-id="cbDTuudGgmBFl4dRAGJhwp"><th data-page-node-id="c53Hxxj87rolIQfJDdcarD">想去</th><th data-page-node-id="Dxgw8E9BNt6D1X55fuvwLY">导航搜</th></tr>
+      <tr data-page-node-id="SSGTfOQZCqzSKSytcM8vxE"><td data-page-node-id="FAYGuySs8JTVAefDtikuSS">中国陶瓷博物馆</td><td data-page-node-id="TEYDeDldvYGZYux07HtM0Q">「中国陶瓷博物馆主入口」</td></tr>
+      <tr data-page-node-id="YIkpYzX1G0wMzh0G9buX4t"><td data-page-node-id="GxjFmfFSI2ZxmTvwL2Vfof">御窑 / 陶阳里</td><td data-page-node-id="58SbCgcdqj86jHwxvplAkq">「御窑遗址南门」</td></tr>
+      <tr data-page-node-id="7Z5MK0inFj0tCfUFLUqFg2"><td data-page-node-id="FKVK01VOcfq7C9pAgKPMjI">陶溪川</td><td data-page-node-id="gdlSJHRRt6lyAs1Adk63en">「陶溪川主广场入口」</td></tr>
+      <tr data-page-node-id="H8Ttvh0ECnegstbHB2svGA"><td data-page-node-id="lRnoZeBuMbMp0GEIvOc1Iw">雕塑瓷厂</td><td data-page-node-id="IIAsoDmBoQ8ugbMYscgOxH">「雕塑瓷厂正门」</td></tr>
+      <tr data-page-node-id="7Za2TjXKWgD4hKuo4vgKpE"><td data-page-node-id="xQbKmnHRYSQXuOrB9lMR9h">三宝村</td><td data-page-node-id="LQlFxsHKzEvNL8dujEtPxG">「三宝蓬艺术聚落」</td></tr>
+      <tr data-page-node-id="YE51RF2Y8MF7KnwnHOVVOs"><td data-page-node-id="fYUTSVLS200YZw6HJuuVjR">瑶里古镇</td><td data-page-node-id="AGB9MnIw5sHijxjPkrUEM3">「瑶里古镇游客中心」</td></tr>
+      <tr data-page-node-id="ruZZ5OUOuU1gW0Eq8uZLE5"><td data-page-node-id="LQbxJD9a75HGQE3b6qumZe">寒溪村</td><td data-page-node-id="wYZNcybRhiTqqsRDpywq5Y">「艺术浮梁会客厅」</td></tr>
+    </table>
+  </div>
+
+  <div class="card" data-page-node-id="xgKa82gDtKJ1tWybQTHKEI">
+    <h3 style="margin-top:2px" data-page-node-id="TLl4pQyuTd7078XWZD0FqR">📸 约拍避坑</h3>
+    <p data-page-node-id="ETgiQmIWjAdNsXpt7jcB2x">①文字确认套餐：服装分区、假睫毛/配饰是否全包、底片全送、精修数量与交付时间。<br data-page-node-id="2xsh8pSGA9NsUkOWFbDIKp">
+    ②确认摄影师性别，明确不临时调换。<br data-page-node-id="PGUdSBsQPDtDZB6SZQZekl">
+    ③早间档务必提前叫车留堵车缓冲，绝对不卡点。<br data-page-node-id="9W2tsMlIjRBL58AL3b4MQl">
+    ④开拍前沟通风格：多特写/多大景、喜欢氛围。</p>
+  </div>
+
+  <div class="card" data-page-node-id="lGhxUuP87zjdYQbq4XMBWD">
+    <h3 style="margin-top:2px" data-page-node-id="7l63sugL0OEsUKK4XLNgxZ">🏺 买瓷避坑</h3>
+    <p data-page-node-id="8mlC0bkV7lykZqyyfZzvm3">①陶阳新村夜市灯光昏暗，手机打光看瑕疵，货比三家。<br data-page-node-id="a4Y4iEf7gYdPQL4fagbvn9">
+    ②雕塑瓷厂主街多流水线货，宝藏工作室在巷子里。<br data-page-node-id="JmiVjSb77GIrWaksNPMD7R">
+    ③陶艺体验问清全部费用，避开低价引流；优先高岭土混合瓷土、现场修坯、透明/影青釉新手友好。<br data-page-node-id="NCWotFYdTqayeAsYDcJPTx">
+    ④邮寄贵重瓷器：保价+加厚缓冲，国庆快递爆仓易破损。</p>
+  </div>
+
+  <div class="card" data-page-node-id="FCog7SPBXLLPsrpQoxzdRo">
+    <h3 style="margin-top:2px" data-page-node-id="hPllB5XRnSb90vATNM9HYz">🍽 餐饮 & 通用</h3>
+    <p data-page-node-id="KK0KknO8W16HkF2DytIq5r">· 江西菜辣度高，统一说「全部微辣，能做不辣的做不辣」。<br data-page-node-id="ThyMyiaiUT5n2FJMZTFHPd">
+    · 国庆热门餐厅提前线上取号，错峰就餐。<br data-page-node-id="OnFo9EwSWNxkz0XZouHwqR">
+    · 陶阳里门票3天有效，可反复进出，不用一天硬逛完。<br data-page-node-id="8B9xmpKfeGTMN3HWMXpZMd">
+    · 石板路多，千万别穿新鞋/高跟鞋。<br data-page-node-id="TTMbXenbJWxv8lb4iosSOX">
+    · 所有博物馆/热门景点务必提前预约，国庆现场基本无余票。<br data-page-node-id="QPdRiVLmXiROqcBDrTVQjn">
+    · 返程早班务必提前约车、提前收拾行李。</p>
+  </div>
+</section>
+
+<!-- ============ TOOLS ============ -->
+<section id="tools" data-page-node-id="EaspN8v97Vae9IcfcAI2tI">
+  <h2 data-page-node-id="dlCCIv2PIiAUY1WmN2v5qV">🧰 实用工具</h2>
+
+  <div class="card" data-page-node-id="hnHhoC0N21pZlCZca95jYu">
+    <h3 style="margin-top:2px" data-page-node-id="WGlfWfMQRpQiai7zzFHEAh">🎒 行李清单（可勾选，自动保存）</h3>
+    <p class="small" data-page-node-id="qvAlkO2EKAGpd2qPPIhnZJ">勾选后本地保存，下次打开仍在。点「重置」清空。</p>
+    <div id="packlist" data-page-node-id="B6g1wE5nHZCxiGYBNKNr1a"></div>
+    <button class="btn ghost" onclick="resetPack()" data-page-node-id="QfVzTFZgdsrcI7c8bsGvkS">重置清单</button>
+  </div>
+
+  <div class="card" data-page-node-id="0xqPAOJ9c227LLSEv1jxui">
+    <h3 style="margin-top:2px" data-page-node-id="nvxNfPh8SjVrCNEYF7QiTN">💰 预算参考估算（人均）</h3>
+    <table class="budget" data-page-node-id="xMF4MN8P6Ugs97jmonu7vp">
+      <tr data-page-node-id="GcyOSfjySocVF34sn3Lf6b"><th data-page-node-id="FsDcEw061CFTf1spwAV8db">项目</th><th data-page-node-id="hnkSShUEF4ehsfokC2PIUg">估算</th></tr>
+      <tr data-page-node-id="2aknvQz1zdCusldgCOD1ag"><td data-page-node-id="bkeHpTSFxMql8m7nQfLYjA">大交通（高铁往返二等座）</td><td data-page-node-id="YFtiI7CPbExPIA5jnvoEo8">¥508（去¥276+回¥232，已订）</td></tr>
+      <tr data-page-node-id="rCXeYXNmNERiaAAYVVPDwg"><td data-page-node-id="5ObICEO5YTYoFC4dB7JGVd">住宿（陶溪川周边×5晚）</td><td data-page-node-id="kxecUQjRyTV8MEglVnaCSc">¥3311（两人合计·人均≈¥1656）</td></tr>
+      <tr data-page-node-id="fpQtQUpv8Z7hnrE9VuPDcu"><td data-page-node-id="tRPhqr8YERAMuHZp0MVWHf">市内打车+瑶里包车</td><td data-page-node-id="PEDnp8t7FwYmtkopXtHdnD">≈¥600-900</td></tr>
+      <tr data-page-node-id="vbfIHkVdSXXAicQ9qaNMYl"><td data-page-node-id="sWmGvKkizt9604ThqrfJjN">餐饮（6天）</td><td data-page-node-id="zeQXrbvUTTQI4dMfum1dXq">≈¥800-1200</td></tr>
+      <tr data-page-node-id="HABH9iESTnyDWCRjDNwQG4"><td data-page-node-id="9r5MB9YhW9cZMeG7b9bhFF">陶艺（野草studio单日）</td><td data-page-node-id="ZOPIGFRtMe7Jz9WaXS8WeU">¥300</td></tr>
+      <tr data-page-node-id="p1qOjfZFSgR99wdNGfCcSU"><td data-page-node-id="BaCNOQPztGIIDwgPiHHHGs">门票（陶阳里通票+展览）</td><td data-page-node-id="or97gGEcVCyb5YNx3Yfo7J">≈¥53-150</td></tr>
+      <tr data-page-node-id="p5CRrUO3teI7CKjKOymfII"><td data-page-node-id="XlDLQrQMBC2j5FVkfKK1Qf">约拍（含妆造）</td><td data-page-node-id="azqW3oaIUIE99AKczeE9A6">≈¥300-700</td></tr>
+      <tr data-page-node-id="5DtqWjsmOCS31KSbxRle3g"><td data-page-node-id="S5wNYQkhNBo0hYJH4fPmUf">伴手礼/淘瓷（弹性）</td><td data-page-node-id="he5H6iciWQDY5qRHdchZyN">¥300起</td></tr>
+      <tr data-page-node-id="B5PkSz9bLXQs7Jq3xvFNhl"><td data-page-node-id="zrRiRjZR9uJyq23mpJTNDG"><b data-page-node-id="9KdlgpajDKhApj0QaNafpN">合计（人均·不含购物）</b></td><td data-page-node-id="FiUPTZEUo7Yp0KvdKkcPa6"><b data-page-node-id="zBdSW9C3QCqWMhOnuu2EKU">≈¥4500-5700</b></td></tr>
+    </table>
+    <p class="small" data-page-node-id="s1j5IhKx5JID55FHDKl0VH">※ 大交通（¥508/人）与住宿（¥3311/两人）为已确认实价；约拍按 ¥300-700 估算。其余为市场参考，以实际下单为准。</p>
+  </div>
+
+  <div class="card" data-page-node-id="EFDg0JHThmDp5U2WuuGfej">
+    <h3 style="margin-top:2px" data-page-node-id="gBO5A87d1beAUMp9fS0LwH">📍 关键地址（点击复制）</h3>
+    <div id="addrs" data-page-node-id="iaYEKjGCvnQQojTJTclqPC"></div>
+  </div>
+
+  <div class="card" data-page-node-id="kHD5Ikr8krcQnc7ahJhZYR">
+    <h3 style="margin-top:2px" data-page-node-id="W1B3iVJjL1AI1nL9YEIlT7">📞 紧急 & 咨询</h3>
+    <p data-page-node-id="715X8ZnN8rq7L1DsAerANf">紧急：<b data-page-node-id="SbTDYnSjCKHeqD59OfGHBH">110</b>（报警）· <b data-page-node-id="RJmYeNdLU2xBZZFrl61MOh">120</b>（急救）· <b data-page-node-id="9hEiaxufizDBvVmwdxFGMw">119</b>（火警）<br data-page-node-id="14A2BwWrvnVoF0r9QsWRnG">
+    旅游服务/政务热线：<b data-page-node-id="ZsLVEaGIm2ZUsA5MjqjgaY">12345</b><br data-page-node-id="U0YvHGBNkFDsHVZoksIXC3">
+    野草studio 吕老师：<b data-page-node-id="7gsKknIwvbCYigSa2pm0ST">14777853873</b><br data-page-node-id="UXsjGMQDnA5lFjQPvV3KtY">
+    官方预约：微信小程序「<b data-page-node-id="EoLMwRkmn0mIlNd9V8wrmF">畅游景德镇</b>」</p>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<!-- ============ 行中 ============ -->
+<div class="phase" id="phase-during" hidden>
+  <main>
+    <h2>🧳 行程中 · 随时记瞬间</h2>
+    <div class="card">
+      <p class="small">旅行中看到什么、吃到什么、临时冒出的想法，随时记一笔。文字 + 地点 + 照片都行，自动按时间存到本机（下次打开还在，不用联网）。</p>
+      <button class="btn" id="addMomentBtn">+ 记一个瞬间</button>
+    </div>
+    <div class="card" id="momentForm" style="display:none">
+      <h3 style="margin-top:2px">✍️ 新瞬间</h3>
+      <label class="small">此刻在哪儿（可空）</label>
+      <input id="mLoc" class="fld" placeholder="如：陶溪川市集 / 瑶里古镇" style="margin:4px 0 10px">
+      <label class="small">想记点什么</label>
+      <textarea id="mText" class="fld" rows="3" placeholder="一句也好：这家冷粉绝了 / 红墙蓝调封神 / 明天想二刷陶阳里…" style="margin:4px 0 10px;resize:vertical"></textarea>
+      <label class="small">加张照片（可空，自动压缩）</label>
+      <input id="mImg" type="file" accept="image/*" style="margin:4px 0 10px;display:block">
+      <div id="mPrev" style="display:none;margin:6px 0"><img id="mPrevImg" style="max-width:100%;border-radius:10px;max-height:180px"></div>
+      <div>
+        <button class="btn" id="saveMoment">保存</button>
+        <button class="btn ghost" id="cancelMoment">取消</button>
+      </div>
+    </div>
+    <div id="momentList"></div>
+  </main>
+</div>
+
+<!-- ============ 行后 ============ -->
+<div class="phase" id="phase-after" hidden>
+  <main>
+    <h2>📷 行后回顾</h2>
+    <div class="card">
+      <p class="small">这里自动汇总你在「行中」记下的所有瞬间（文字 + 照片 + 地点），不用手动整理。想发朋友圈 / 备忘录，点「复制全部」即可。</p>
+      <p id="afterStat" style="font-weight:700;color:var(--blue-d);margin:6px 0"></p>
+      <button class="btn" id="copyAllBtn">复制全部瞬间文本</button>
+    </div>
+    <h3>🖼 照片墙</h3>
+    <div id="afterGallery"></div>
+    <h3>📝 瞬间时间线</h3>
+    <div id="afterText"></div>
+  </main>
+</div>
+
+<footer data-page-node-id="7Q1p480Vr4YsxNhgpZw3xW">
+  本工具由现有文字攻略 + 2026-09-23 网络核实整理而成。天气/开放时间/市集以出发前官方实时发布为准。<br data-page-node-id="NSHRUYpsnaILQg6W6AqF0G">
+  景德镇 · 6天5晚 · 国庆错峰出行 🏺
+</footer>
+
+<script>
+/* Sidebar nav (vertical directory) */
+const sideNav=document.getElementById('sideNav');
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('overlay');
+function showTab(b){
+  document.querySelectorAll('#sideNav button[data-t]').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');
+  const sec=document.getElementById(b.dataset.t);
+  if(sec) sec.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  sidebar.classList.remove('open'); overlay.classList.remove('show');
+}
+sideNav.addEventListener('click',e=>{
+  const t=e.target.closest('button[data-t]'); if(t){showTab(t);return;}
+  const g=e.target.closest('.grp-toggle'); if(g){document.getElementById('grp-days').classList.toggle('collapsed');}
+});
+document.getElementById('menuToggle').addEventListener('click',()=>{
+  sidebar.classList.add('open'); overlay.classList.add('show');
+});
+overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('show');});
+
+/* Packing list */
+const PACK=[
+  '实体身份证原件（陶瓷博物馆强制，电子证无效）',
+  '舒适平底鞋（石板路极多）',
+  '薄外套（山区/早晚，10.6降温）',
+  '浅色衣服（拍古建筑/红墙出片）',
+  '折叠伞（防雨+防晒）',
+  '驱蚊液（瑶里、三宝村）',
+  '防晒霜（高温暴晒日）',
+  '手机补光灯（夜市挑瓷）',
+  '便携早餐（10.6早班，面包牛奶）',
+  '充电宝',
+  '保湿/降火（天干物燥多补水）',
+  '现金零钱（部分夜市/小吃）'
+];
+const KEY='jdzt_pack_v1';
+let saved={};
+try{saved=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
+const pl=document.getElementById('packlist');
+PACK.forEach((t,i)=>{
+  const id='p'+i;
+  const lab=document.createElement('label');
+  lab.className='chk'+(saved[id]?' done':'');
+  lab.innerHTML='<input type="checkbox" '+(saved[id]?'checked':'')+'><span>'+t+'</span>';
+  const cb=lab.querySelector('input');
+  cb.addEventListener('change',()=>{
+    saved[id]=cb.checked;
+    lab.classList.toggle('done',cb.checked);
+    localStorage.setItem(KEY,JSON.stringify(saved));
+  });
+  pl.appendChild(lab);
+});
+function resetPack(){localStorage.removeItem(KEY);document.querySelectorAll('#packlist input').forEach(c=>{c.checked=false;c.closest('.chk').classList.remove('done');});}
+
+/* Addresses copy */
+const ADDR=[
+  ['中国陶瓷博物馆主入口','昌江区紫晶大道1号'],
+  ['御窑遗址南门','珠山区珠山中路187号'],
+  ['陶溪川主广场入口','新厂西路150号'],
+  ['雕塑瓷厂正门','珠山区雕塑瓷厂'],
+  ['三宝蓬艺术聚落','珠山区竟成镇三宝路'],
+  ['瑶里古镇游客中心','浮梁县瑶里镇205省道'],
+  ['艺术浮梁会客厅','浮梁县臧湾乡寒溪村'],
+  ['野草studio','珠山区竟成街道李家坳路5号']
+];
+const ax=document.getElementById('addrs');
+ADDR.forEach(([name,addr])=>{
+  const d=document.createElement('div');
+  d.className='chk';
+  d.style.cursor='default';
+  d.innerHTML='<span style="flex:1"><b>'+name+'</b><br><span class="small">'+addr+'</span></span><button class="copybtn" onclick="copyTxt(\''+addr.replace(/'/g,"\\'")+'\')">复制</button>';
+  ax.appendChild(d);
+});
+function copyTxt(t){
+  navigator.clipboard.writeText(t).then(()=>{alert('已复制：'+t);}).catch(()=>{alert('复制失败，请手动选择：'+t);});
+}
+
+/* ---------- Top phase tabs ---------- */
+const menuToggle=document.getElementById('menuToggle');
+const phaseBtns=document.querySelectorAll('nav.phases button');
+function switchPhase(p){
+  phaseBtns.forEach(b=>b.classList.toggle('active',b.dataset.phase===p));
+  document.getElementById('phase-before').hidden=(p!=='before');
+  document.getElementById('phase-during').hidden=(p!=='during');
+  document.getElementById('phase-after').hidden=(p!=='after');
+  menuToggle.style.display=(p==='before')?'':'none';
+  if(p==='during') renderMoments();
+  if(p==='after') renderAfter();
+  window.scrollTo({top:0});
+}
+phaseBtns.forEach(b=>b.addEventListener('click',()=>switchPhase(b.dataset.phase)));
+
+/* ---------- 行中：随时记瞬间 ---------- */
+const MKEY='jdzt_moments_v1';
+let pendingImg=null;
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(ts){const d=new Date(ts);const p=n=>String(n).padStart(2,'0');return (d.getMonth()+1)+'月'+d.getDate()+'日 '+p(d.getHours())+':'+p(d.getMinutes());}
+function loadMoments(){try{return JSON.parse(localStorage.getItem(MKEY)||'[]');}catch(e){return[];}}
+function saveMoments(a){localStorage.setItem(MKEY,JSON.stringify(a));}
+
+const momentForm=document.getElementById('momentForm');
+const mText=document.getElementById('mText');
+const mLoc=document.getElementById('mLoc');
+const mImg=document.getElementById('mImg');
+const mPrev=document.getElementById('mPrev');
+const mPrevImg=document.getElementById('mPrevImg');
+
+document.getElementById('addMomentBtn').addEventListener('click',()=>{momentForm.style.display='block';mText.focus();});
+document.getElementById('cancelMoment').addEventListener('click',resetForm);
+mImg.addEventListener('change',()=>{
+  const f=mImg.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{const img=new Image();img.onload=()=>{
+    const max=1200;let w=img.width,h=img.height;if(w>max){const s=max/w;w=max;h=Math.round(h*s);}
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    pendingImg=c.toDataURL('image/jpeg',0.72);
+    mPrevImg.src=pendingImg;mPrev.style.display='block';
+  };img.src=r.result;};
+  r.readAsDataURL(f);
+});
+document.getElementById('saveMoment').addEventListener('click',()=>{
+  const text=mText.value.trim();const loc=mLoc.value.trim();
+  if(!text && !pendingImg){alert('写点什么，或者加张照片吧～');return;}
+  const arr=loadMoments();
+  arr.unshift({id:Date.now(),ts:Date.now(),text,loc,img:pendingImg});
+  try{saveMoments(arr);}catch(e){alert('本机存储已满，请删除部分瞬间后再记。');return;}
+  resetForm();renderMoments();renderAfter();
+});
+function resetForm(){mText.value='';mLoc.value='';mImg.value='';pendingImg=null;mPrev.style.display='none';momentForm.style.display='none';}
+
+function renderMoments(){
+  const arr=loadMoments();const box=document.getElementById('momentList');
+  if(!arr.length){box.innerHTML='<div class="note">还没记任何瞬间。旅途中的小发现，随时点上方「+ 记一个瞬间」。</div>';return;}
+  box.innerHTML=arr.map(m=>{
+    let h='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="small">'+fmt(m.ts)+'</span>'+(m.loc?'<span class="tag t-alt">'+esc(m.loc)+'</span>':'')+'</div>';
+    if(m.text)h+='<p style="margin:6px 0">'+esc(m.text)+'</p>';
+    if(m.img)h+='<img src="'+m.img+'" style="max-width:100%;border-radius:10px;margin-top:6px">';
+    h+='<button class="copybtn" data-del="'+m.id+'" style="margin-top:8px">删除这条</button></div>';
+    return h;
+  }).join('');
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const a=loadMoments().filter(x=>x.id!=b.dataset.del);saveMoments(a);renderMoments();renderAfter();});
+}
+function renderAfter(){
+  const arr=loadMoments();
+  const gal=document.getElementById('afterGallery');
+  const txt=document.getElementById('afterText');
+  const stat=document.getElementById('afterStat');
+  if(!arr.length){stat.textContent='';gal.innerHTML='<div class="note">还没有记录。旅行中在「行中」记下瞬间，这里会自动汇总成回顾。</div>';txt.innerHTML='';return;}
+  const imgs=arr.filter(m=>m.img);
+  stat.textContent='共 '+arr.length+' 条瞬间 · '+imgs.length+' 张照片';
+  gal.innerHTML=imgs.length?'<div class="food-grid">'+imgs.map(m=>'<img src="'+m.img+'" style="width:100%;border-radius:10px;aspect-ratio:1/1;object-fit:cover">').join('')+'</div>':'<div class="small">这次还没存照片。</div>';
+  txt.innerHTML='<div class="tl">'+arr.slice().reverse().map(m=>'<div class="ev"><span class="t">'+fmt(m.ts)+'</span> '+(m.loc?'<span class="tag t-alt">'+esc(m.loc)+'</span> ':'')+'<span class="d">'+(m.text?esc(m.text):'<i>仅照片</i>')+'</span></div>').join('')+'</div>';
+}
+document.getElementById('copyAllBtn').addEventListener('click',()=>{
+  const arr=loadMoments();if(!arr.length){alert('还没有记录');return;}
+  const t=arr.slice().reverse().map(m=>'【'+fmt(m.ts)+'】'+(m.loc?'@'+m.loc+' ':'')+(m.text||'')).join('\n');
+  navigator.clipboard.writeText(t).then(()=>alert('已复制全部瞬间文本，可粘贴到备忘录/社交平台')).catch(()=>alert('复制失败，请手动选择'));
+});
+renderMoments();renderAfter();
+</script>
+</body>
+</html>
